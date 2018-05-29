@@ -1,0 +1,219 @@
+<Workspace Version="1.3.3.4651" X="230.667389232808" Y="211.088447241737" zoom="0.344564664035941" ScaleFactor="1" Name="Compare revit spaces with graph spaces" Description="" ID="e9c17ec9-6dc3-493c-bfb1-ccce2685b622" Category="MB.graph.levels">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="DSCore.List" resolvedName="DSCore.List" assemblyName="DSCoreNodes.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="8104fd18-f45d-4905-b101-ddb4a66bdf7e" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="504.632399776471" y="70.2066853853187" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="OUT[0];&#xA;OUT[1];&#xA;OUT[2];&#xA;OUT[3];&#xA;OUT[4];&#xA;OUT[5];&#xA;OUT[6];&#xA;OUT[7];&#xA;OUT[8];&#xA;OUT[9];&#xA;OUT[10];&#xA;OUT[11];&#xA;OUT[12];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="b79c90c2-03db-4013-93b0-85d261fef50e" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="36.077561915211" y="-68.5230845549264" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="settings" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="4c9a35de-e492-4b41-9322-3d4d9c696ae4" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="39.1847030164732" y="30.9054306854636" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="graph spaces" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="a3f8dd53-a5fc-45b0-8792-8d5c08c27c21" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="43.8454146683665" y="110.137528767649" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="revit spaces" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="d1abafe4-34a4-413f-bcc4-8299bea8bedf" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="846.191979115346" y="-272.592191244468" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Revit: to modify name" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="b8f8d56b-9812-4f99-b1a7-d7cedba81da8" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="851.773960278295" y="-207.288795037052" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Revit: new names" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="966f1044-b420-4eae-8089-6de44dddd81f" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="850.367167863463" y="-135.76068184692" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Revit: to modify number" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="f8fb54b3-49c9-49c7-8161-1e524d752ca6" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="847.836790535055" y="-72.9067196049349" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Revit: new numbers" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="b4a70c17-0623-434c-bddd-7074fa24b9e1" type="PythonNodeModels.PythonNode" nickname="Compare revit spaces with graph spaces" x="214.72996178407" y="1.81912580505593" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="true" inputcount="3">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <Script>import clr
+
+#The inputs to this node will be stored as a list in the IN variables.
+settings = IN[0]
+graphList = IN[1]
+revitList = IN[2] # can be empty
+
+# variables
+revitModifyName = [] #revitList can be empty
+revitNewNames = []
+revitModifyNumber = [] #revitList can be empty
+revitNewNumbers = []
+revitDeleteSpaceLevels = [] #revitList can be empty
+revitCreateSpaceLevels = []
+revitDelete = [] #revitList can be empty
+revitCreate = [False] * len(graphList)
+
+graphModify = [False] * len(graphList)
+graphNewNames = []
+graphNewNumbers = []
+graphDelete = [False] * len(graphList)
+graphCreate = [] #revitList can be empty
+
+###########################################
+if settings[0]: #graph to Revit
+	if settings[1] and revitList is not None: #modify Revit spaces? (revitList can be empty)
+		revitModifyName = [False] * len(revitList)
+		revitModifyNumber = [False] * len(revitList)
+		revitDeleteSpaceLevels = [False] * len(revitList)
+		i = -1
+		for revitEl in revitList:
+			i += 1
+			if revitEl[0] == "": #space has space_URI value?
+				continue #if empty, there is no corresponding space to be found
+			for graphEl in graphList:
+				if revitEl[0] == graphEl[0]: #URI of space corresponds to entity of graph?
+					if graphEl[1] is not None:
+						revitModifyName[i] = True
+						revitNewNames.append(graphEl[1])
+					if graphEl[2] is not None:
+						revitModifyNumber[i] = True
+						revitNewNumbers.append(graphEl[2])
+					if graphEl[4] != revitEl[4]: #control Level of Revit Space
+						revitDeleteSpaceLevels[i] = True # needed to delete spaces (modify levels of spaces)
+						revitCreateSpaceLevels.append(graphEl) # needed to create spaces (modify levels of spaces)
+					break #if the corresponding element is found, the comparison can stop					
+	
+	if settings[2] and revitList is not None: #delete Revit spaces? (revitList can be empty)
+		revitDelete = [True] * len(revitList)
+		i = -1
+		for revitEl in revitList:
+			i += 1
+			if revitEl[0] == "": #space has space_URI value?
+				continue #if empty, there is no corresponding space to be found
+			for graphEl in graphList:
+				if revitEl[0] == graphEl[0]:
+					revitDelete[i] = False
+					break
+				
+	if settings[3]: #create new Revit spaces?
+		if revitList is None: #(revitList can be empty)
+			revitCreate = [True] * len(graphList)
+		else:
+			i = -1
+			for graphEl in graphList:
+				i += 1
+				if graphEl[3] is None: #space has value for revit_uuid_simple? 
+					revitCreate[i] = True
+					continue
+				for revitEl in revitList:
+					if graphEl[0] == revitEl[0]: #URI of space corresponds to Revit space URI?
+						revitCreate[i] = False
+						break
+					else: revitCreate[i] = True
+###########################################
+else: #Revit to graph
+	if settings[4]: #modify graph Space entities?
+		i = -1
+		for graphEl in graphList:
+			i += 1
+			if graphEl[3] is None or revitList is None: #space has revit_uuid_simple value? (revitList can be empty)
+				continue #if empty, there is no corresponding space to be found
+			for revitEl in revitList:
+				if revitEl[0] == graphEl[0]: #URI of space corresponds to entity of graph?
+					graphModify[i] = True
+					graphNewNames.append(revitEl[1])
+					graphNewNumbers.append(revitEl[2])
+					break #if the corresponding element is found, the comparison can stop	
+	
+	if settings[5]: #delete graph Space entities?
+		graphDelete = [True] * len(graphList)
+		if revitList is not None: #revitList can be empty
+			i = -1
+			for graphEl in graphList:
+				i += 1
+				if graphEl[3] is None: #space has revit_uuid_simple value?
+					continue #if empty, there is no corresponding space to be found
+				for revitEl in revitList:
+					if revitEl[0] == graphEl[0]:
+						graphDelete[i] = False
+						break
+	
+	if settings[6]: #create new graph Space entities?
+		if revitList is not None: #revitList can be empty
+			graphCreate = [False] * len(revitList)
+			i = -1
+			for revitEl in revitList:
+				i += 1
+				if revitEl[0] == "": #space has value for storey_URI?
+					graphCreate[i] = True
+					continue
+				for graphEl in graphList:
+					if graphEl[0] == revitEl[0]: #URI of space corresponds to Revit space URI?
+						graphCreate[i] = False
+						break
+					else: graphCreate[i] = True
+###########################################
+OUT = [revitModifyName,revitNewNames,revitModifyNumber,revitNewNumbers,revitDeleteSpaceLevels,revitCreateSpaceLevels,revitDelete,revitCreate,graphModify,graphNewNames,graphNewNumbers,graphDelete,graphCreate]</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="b47a9293-9081-4966-bc15-5d3e88a1ff65" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="857.075528688486" y="-11.7822502544279" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Revit: to modify space Level (delete)" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="e53963a0-f655-425a-bb1b-de818ba41fdd" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="861.732028426576" y="60.2739568183665" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Revit: to modify space Level (create)" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="7dc54a9c-1c31-4475-8de2-ffe3af2f52b8" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="858.385421896948" y="124.151253003396" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Revit: to delete" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="65cd908e-75f5-4ab2-9cf7-06c5dc3a3ddc" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="862.714967803729" y="190.928449777124" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Revit: to create" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="51301122-84e1-46b1-a181-b826a9aeb5b9" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="877.418040852676" y="376.699246594103" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Graph: to modify" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="378b181e-d766-4ccc-a6be-97115d7a9289" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="880.529973236152" y="439.429814708086" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Graph: new names" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="7f6ab4a5-ab61-49a4-8dbf-3106d9df1970" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="883.740352642086" y="513.574890390289" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Graph: new numbers" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="f7fc48c0-1aac-4dd2-a77a-8a0a1633aa09" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="877.971451526409" y="599.958299074186" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Graph: to delete" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="fc954d43-7e58-4672-b574-fc6f174a52a0" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="882.202550410732" y="677.953109371219" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Graph: to create" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="8104fd18-f45d-4905-b101-ddb4a66bdf7e" start_index="0" end="d1abafe4-34a4-413f-bcc4-8299bea8bedf" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8104fd18-f45d-4905-b101-ddb4a66bdf7e" start_index="1" end="b8f8d56b-9812-4f99-b1a7-d7cedba81da8" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8104fd18-f45d-4905-b101-ddb4a66bdf7e" start_index="2" end="966f1044-b420-4eae-8089-6de44dddd81f" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8104fd18-f45d-4905-b101-ddb4a66bdf7e" start_index="3" end="f8fb54b3-49c9-49c7-8161-1e524d752ca6" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8104fd18-f45d-4905-b101-ddb4a66bdf7e" start_index="4" end="b47a9293-9081-4966-bc15-5d3e88a1ff65" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8104fd18-f45d-4905-b101-ddb4a66bdf7e" start_index="5" end="e53963a0-f655-425a-bb1b-de818ba41fdd" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8104fd18-f45d-4905-b101-ddb4a66bdf7e" start_index="6" end="7dc54a9c-1c31-4475-8de2-ffe3af2f52b8" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8104fd18-f45d-4905-b101-ddb4a66bdf7e" start_index="7" end="65cd908e-75f5-4ab2-9cf7-06c5dc3a3ddc" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8104fd18-f45d-4905-b101-ddb4a66bdf7e" start_index="8" end="51301122-84e1-46b1-a181-b826a9aeb5b9" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8104fd18-f45d-4905-b101-ddb4a66bdf7e" start_index="9" end="378b181e-d766-4ccc-a6be-97115d7a9289" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8104fd18-f45d-4905-b101-ddb4a66bdf7e" start_index="10" end="7f6ab4a5-ab61-49a4-8dbf-3106d9df1970" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8104fd18-f45d-4905-b101-ddb4a66bdf7e" start_index="11" end="f7fc48c0-1aac-4dd2-a77a-8a0a1633aa09" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8104fd18-f45d-4905-b101-ddb4a66bdf7e" start_index="12" end="fc954d43-7e58-4672-b574-fc6f174a52a0" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="b79c90c2-03db-4013-93b0-85d261fef50e" start_index="0" end="b4a70c17-0623-434c-bddd-7074fa24b9e1" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="4c9a35de-e492-4b41-9322-3d4d9c696ae4" start_index="0" end="b4a70c17-0623-434c-bddd-7074fa24b9e1" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="a3f8dd53-a5fc-45b0-8792-8d5c08c27c21" start_index="0" end="b4a70c17-0623-434c-bddd-7074fa24b9e1" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="b4a70c17-0623-434c-bddd-7074fa24b9e1" start_index="0" end="8104fd18-f45d-4905-b101-ddb4a66bdf7e" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>
