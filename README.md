@@ -1,4 +1,4 @@
-#StardogRevit-synchronizer
+# StardogRevit-synchronizer
 
 * note: tested for Revit v2018.3 and Stardog triplestore v5.2.1. Future versions of this plugin might include other SPARQL endpoints to communicate with
 * note: dynamo script needs Dynamo for Revit v1.3.0 installed for the used Revit version
