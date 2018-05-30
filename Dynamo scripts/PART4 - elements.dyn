@@ -1,3 +1,6 @@
+<!-- This Dynamo script is made by Mathias Bonduel (https://www.kuleuven.be/wieiswie/en/person/00110827) and contains contributions of Mads Holten Rasmussen -->
+<!-- This research is funded by the Research Foundation Flanders (FWO) in the form of a personal Strategic Basic research grant. -->
+
 <Workspace Version="1.3.3.4651" X="-6918.79725684715" Y="108.959805915733" zoom="1.20788649181223" ScaleFactor="1" Name="Home" Description="" RunType="Manual" RunPeriod="1000" HasRunWithoutCrash="True">
   <NamespaceResolutionMap>
     <ClassMap partialName="Revit.Room" resolvedName="Revit.Elements.Room" assemblyName="RevitNodes.dll" />

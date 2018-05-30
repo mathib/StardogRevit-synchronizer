@@ -1,3 +1,6 @@
+<!-- This Dynamo script is made by Mathias Bonduel (https://www.kuleuven.be/wieiswie/en/person/00110827) and contains contributions of Mads Holten Rasmussen -->
+<!-- This research is funded by the Research Foundation Flanders (FWO) in the form of a personal Strategic Basic research grant. -->
+
 <Workspace Version="1.3.3.4651" X="191.558897821217" Y="128.832537853967" zoom="0.146008528892522" ScaleFactor="1" Name="Home" Description="" RunType="Manual" RunPeriod="1000" HasRunWithoutCrash="False">
   <NamespaceResolutionMap />
   <Elements>
