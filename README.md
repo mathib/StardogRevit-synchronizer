@@ -2,6 +2,7 @@
 
 * note: tested for Revit v2018.3 and Stardog triplestore v5.2.1. Future versions of this plugin might include other SPARQL endpoints to communicate with
 * note: dynamo script needs Dynamo for Revit v1.3.3 installed for the used Revit version
+* note: this version of the Dynamo script expects RDF triples according to an older version of BOT, which is made available in this repo: `Linked Building Data ontologies/bot_v0.2.0_20171027.ttl`
 
 ## Installation details
 0) Download or Git clone this repository to your computer
